@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="content"> 
+        <h1 class="title">Dish Diver</h1>
+        <label for="ingredients" class="header">Enter Ingredients:</label>
+        <input type="text" id="search" class="ing-input" placeholder="Tomatoes, rice, chicken breast, cyan pepper...">
+        <button class="search-btn" onclick="getrecipe(document.getElementById('search').value)">Search</button>
+
+        <hr>
+
+        <p class="output">Recipes:</p>
+        <div class="recipe-output" id="output">
+            <a href="" class="recipe-link" id="sourceLink"></a>
+        </div>
+    </div>
+    <div class="sub-btns">
+        <ul>
+            <li><a href="" class="favs">Favourites</a></li>
+            <li><a href="about.html" class="about">About</a></li>
+            <li><a href="" class="logout">Logout</a></li>
+        </ul>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Incorporating the Spoonacular API to the application
+      const apiKey = "20bd07b3cd464357a9dc8689b4e6088e"; // Actual api key is hidden
+
+      function getrecipe(ingredients) {
+        const apiUrl = `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${ingredients}`;
+
+        $.get(apiUrl, function (data) {
+          console.log(data); // Check the API response in the console
+          displayRecipes(data);
+        });
+      }
+
+      // Creating a function to handle the API response and display the recipes on the webpage
+      function displayRecipes(data) {
+        const outputContainer = document.getElementById("output");
+        outputContainer.innerHTML = ""; // Clears previous results
+
+        data.forEach((recipe) => {
+          const recipeLink = document.createElement("a"); // Create a new anchor element
+          recipeLink.href = recipe.sourceUrl;
+          recipeLink.textContent = recipe.title;
+          recipeLink.className = "recipe-link";
+
+          outputContainer.appendChild(recipeLink);
+        });
+
+        // Calculate the height based on the number of links and set it dynamically
+        const linkCount = data.length;
+        const minHeight = 50; // Set a minimum height
+        const calculatedHeight = linkCount * 20 + minHeight; // Adjust this value as needed
+
+        outputContainer.style.height = `${calculatedHeight}px`;
+      }
+    </script>
+  </body>
+</html>
